@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>ดูคะแนนกลุ่ม</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h2>ดูคะแนนกลุ่มของคุณ</h2>
+  <input id="code" placeholder="รหัสกลุ่ม เช่น A123" />
+  <input id="password" placeholder="รหัสผ่านกลุ่ม" type="password" />
+  <button onclick="checkScore()">ดูคะแนน</button>
+  <p id="result"></p>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://dpuatstokjwuivwlasgy.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwdWF0c3Rva2p3dWl2d2xhc2d5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyMjMwMDUsImV4cCI6MjA2Mjc5OTAwNX0.bH3jyVvKq8gG4yWs55lgYhjsHJQxpNnlBKRu5UTQ8Cs'
+    );
+
+    async function checkScore() {
+      const code = document.getElementById("code").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const { data, error } = await supabase
+        .from('groups')
+        .select('*')
+        .eq('code', code)
+        .eq('password', password)
+        .single();
+
+      const result = document.getElementById("result");
+      if (error || !data) {
+        result.textContent = "รหัสกลุ่มหรือรหัสผ่านไม่ถูกต้อง";
+      } else {
+        result.textContent = `คะแนนของ ${data.name} คือ ${data.score} คะแนน`;
+      }
+    }
+  </script>
+</body>
+</html>
