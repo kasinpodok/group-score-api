@@ -1,1 +1,0 @@
-# group-score-api
